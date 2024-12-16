@@ -1,14 +1,9 @@
 from __future__ import annotations
 
-import os
-from dotenv import load_dotenv, find_dotenv
-_ = load_dotenv(find_dotenv())
-
-
 import logging
 from typing import Dict, List, Any
 from langchain.embeddings.base import Embeddings
-from langchain.pydantic import BaseModel, root_validator
+from pydantic import BaseModel, model_validator
 
 logger = logging.getLogger(__name__)
 class ZhipuAIEmbeddings(BaseModel, Embeddings):
@@ -16,7 +11,7 @@ class ZhipuAIEmbeddings(BaseModel, Embeddings):
         
     client: Any
     """`zhipuai.ZhipuAI`"""
-    @root_validator()
+    @model_validator(mode="before")
     def validate_envirioment(cls, values: Dict) -> Dict:
         """
         实例化ZhipuAI为values["client"]
